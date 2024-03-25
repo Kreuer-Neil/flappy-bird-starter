@@ -69,9 +69,11 @@ export const settings = {
         tubesNumber: 1,
         minHeight: -130,
         maxHeight: 130,
-        minDistance: 60,
+        minDistance: 80,
         maxDistance: 100,
     },
     canvasId: 'game',
     gravity: .07,
+    acceleration: .0003,
+    maxSpeed: 3,
 }

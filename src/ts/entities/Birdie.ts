@@ -1,9 +1,10 @@
 import {Drawable} from "./Drawable";
 import {IAnimatable} from "../Types/IAnimatable";
 import {settings} from "../settings";
+import {checkCollision} from "../helper";
 
 export class Birdie extends Drawable implements IAnimatable {
-    public readonly dx: number;
+    private readonly dx: number;
     private dy: number;
     private angle: number;
     private sx: number;
@@ -13,8 +14,9 @@ export class Birdie extends Drawable implements IAnimatable {
     private timerRota: number;
     private fallSpeed: number;
     private readonly groundLevel: number;
+    private readonly requestAnimationFrameID:{id:number};
 
-    constructor(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, sprite: HTMLImageElement) {
+    constructor(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, sprite: HTMLImageElement, requestAnimationFrameID:{id:number}) {
         super(ctx, canvas, sprite);
         this.dx = this.canvas.width / 2;
         this.dy = (this.canvas.height - settings.ground.frame.dh) / 2;
@@ -27,18 +29,18 @@ export class Birdie extends Drawable implements IAnimatable {
 
         this.sx = settings.birdie.frames[0].sx;
         this.sy = settings.birdie.frames[0].sy;
+
+        this.requestAnimationFrameID = requestAnimationFrameID;
     }
 
-    update() {
+    public update() {
         this.animate();
 
         if (this.fallSpeed < settings.birdie.maxFallSpeed)
             this.fallSpeed += settings.gravity;
 
         this.dy += this.fallSpeed;
-        if (this.dy - settings.birdie.framesBis.dh / 2 >= this.groundLevel) {
-            this.dy = this.groundLevel + settings.birdie.framesBis.dh / 2;
-        }
+        // if (this.dy - settings.birdie.framesBis.dh / 2 >= this.groundLevel) this.dy = this.groundLevel + settings.birdie.framesBis.dh / 2;
 
         if (this.timerRota <= 0 && this.angle <= settings.birdie.rotation.maxRota)
             this.angle += settings.birdie.rotation.angularSpeed;
@@ -51,7 +53,7 @@ export class Birdie extends Drawable implements IAnimatable {
         this.timerRota = settings.birdie.rotation.timerRota;
     }
 
-    animate() {
+    private animate() {
         if (this.timer === settings.birdie.animationTime) {
             this.timer = 0;
             this.frame++;
@@ -62,8 +64,7 @@ export class Birdie extends Drawable implements IAnimatable {
         this.timer++;
     }
 
-
-    draw() {
+    public draw() {
         this.ctx.save();
         this.ctx.translate(this.dx, this.dy);
         this.ctx.rotate((this.angle * Math.PI) / 180);
@@ -77,4 +78,17 @@ export class Birdie extends Drawable implements IAnimatable {
         this.ctx.restore();
     }
 
+    public collide(x1:number,x2:number,y1:number,y2:number) {
+        if(checkCollision(
+            this.dx-settings.birdie.framesBis.dw / 2,
+            this.dx+settings.birdie.framesBis.dw / 2,
+            this.dy-settings.birdie.framesBis.dh / 2,
+            this.dy+settings.birdie.framesBis.dh / 2,
+            x1,x2,y1,y2
+        )) this.endGame();
+    }
+
+    private endGame() {
+        cancelAnimationFrame(this.requestAnimationFrameID.id);
+    }
 }

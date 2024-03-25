@@ -4,39 +4,37 @@ import {settings} from "../settings";
 import {random} from "../helper";
 
 export class Tubes extends Drawable implements IAnimatable {
-    private dx: number;
-    private dy: number;
-    private readonly x: number;
+    public dx: number;
+    public dy: number;
     private readonly y: number;
-    private dyBis: number;
-    private number: number;
+    public dyBis: number;
     private readonly offset: number;
     private distance: number;
-    private readonly tubesDistance: number;
+    private readonly depX: number;
+    private speed: number;
 
-    constructor(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, sprite: HTMLImageElement) {
+    constructor(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, sprite: HTMLImageElement, depX: number) {
         super(ctx, canvas, sprite);
 
-        this.number = settings.tubesPair.tubesNumber;
-        this.offset = -settings.tubesPair.top.sw;
-        this.tubesDistance = this.canvas.width / this.number;
+        this.offset = -settings.tubesPair.top.dw;
         this.distance = 0;
 
-        this.x = this.canvas.width;
         this.y = ((this.canvas.height - settings.ground.frame.dh) / 2) - (settings.tubesPair.top.dh + settings.tubesPair.maxDistance/2);
 
-        this.dx = this.x;
+        this.depX = depX;
+        this.dx = this.depX;
         this.dy = this.y;
         this.dyBis = this.dy + settings.tubesPair.top.dh + settings.tubesPair.maxDistance;
+        this.speed = 1;
     }
 
     update(): void {
-        if (this.dx <= this.offset) this.redraw(0);
-        this.dx--;
-
+        if (this.dx <= this.offset) this.redraw();
+        if (this.speed<settings.maxSpeed) this.speed+=settings.acceleration
+            this.dx-=this.speed;
     }
 
-    redraw(tube): void {
+    redraw(): void {
         this.dx = this.canvas.width;
         this.distance = random(settings.tubesPair.minDistance, settings.tubesPair.maxDistance);
         this.dy = this.y + random(settings.tubesPair.minHeight, settings.tubesPair.maxHeight);
@@ -66,5 +64,4 @@ export class Tubes extends Drawable implements IAnimatable {
             settings.tubesPair.bottom.dh
         );
     }
-
 }
