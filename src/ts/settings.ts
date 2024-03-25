@@ -4,7 +4,22 @@ export const settings = {
             {sx: 6, sy: 982},
             {sx: 62, sy: 982},
             {sx: 118, sy: 982}
-        ]
+        ],
+        framesBis: {
+            sw: 34,
+            sh: 24,
+            dw: 34,
+            dh: 24,
+        },
+        rotation: {
+            minRota: -40,
+            maxRota: 90,
+            angularSpeed: 2,
+            timerRota: 30,
+        },
+        animationTime: 7,
+        maxFallSpeed: 6,
+        jump: 3,
     },
     background: {
         frame: {
@@ -32,24 +47,31 @@ export const settings = {
     },
     tubesPair: {
         top: {
-            sx: 553,
-            sy: 0,
-            sw: 53,
-            sh: 400,
+            sx: 112, //553,
+            sy: 646, //0,
+            sw: 52, //53,
+            sh: 320, //400,
             dx: 0,
             dy: 0,
-            dw: 53,
-            dh: 400
+            dw: 52, //53,
+            dh: 320, //400
         },
         bottom: {
-            sx: 502,
-            sy: 0,
-            sw: 53,
-            sh: 400,
+            sx: 168, //502,
+            sy: 646, //0,
+            sw: 52, //53,
+            sh: 320, //400,
             dx: 0,
             dy: 0,
-            dw: 53,
-            dh: 400
-        }
+            dw: 52, //53,
+            dh: 320, //400
+        },
+        tubesNumber: 1,
+        minHeight: -130,
+        maxHeight: 130,
+        minDistance: 60,
+        maxDistance: 100,
     },
+    canvasId: 'game',
+    gravity: .07,
 }
